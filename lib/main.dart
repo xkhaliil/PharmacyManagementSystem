@@ -18,8 +18,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
         theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: Color.fromARGB(255, 84, 84, 84),
-        primaryColor: Color.fromARGB(255, 60, 60, 60),
+        scaffoldBackgroundColor: Color(0xFFE4F9F5),
+        primaryColor: Color(0xFFE4F9F5),
       ),
   
       initialRoute: SplashScreen.routeName,

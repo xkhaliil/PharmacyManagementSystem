@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pharmacymanagementsystem/error_screen/error.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,11 +14,18 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      
       body: SafeArea(
         child: Center(
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             const SizedBox(height: 25),
+            Align(
+              alignment: Alignment.center,
+              child: SizedBox(child: Lottie.asset('video/login.json',
+              height: 250,
+              width: 250,
+              )),
+            ),
             const Text(
               'Hello Again',
               style: TextStyle(
@@ -91,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.deepPurple,
+                    color: Color(0xFF11999E),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Center(

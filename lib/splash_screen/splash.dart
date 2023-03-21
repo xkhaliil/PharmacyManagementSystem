@@ -23,7 +23,7 @@ class SplashScreen extends StatelessWidget {
                     alignment: Alignment.center,
                     child: SizedBox(
                       child: Lottie.asset(
-                        "video/splash2.json",
+                        "video/splash.json",
                       ),
                     ),
                   ),

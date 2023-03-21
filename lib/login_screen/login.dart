@@ -27,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
               )),
             ),
             const Text(
-              'Hello Again',
+              'Welcome',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 36,
@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
 
             const Text(
-              'welcome back you\'ve been missed!',
+              'Efficient, user-friendly, and at your service! Welcome to your one-stop solution for pharmacy management.',
               style: TextStyle(
                 fontSize: 20,
               ),

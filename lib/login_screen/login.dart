@@ -34,12 +34,16 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
 
-            const Text(
-              'Efficient, user-friendly, and at your service! Welcome to your one-stop solution for pharmacy management.',
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            ),
+             const Center(
+               child: Text(
+                'Efficient, user-friendly, and at your service! Welcome to your one-stop solution for pharmacy management.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 15,
+                  
+                ),
+                         ),
+             ),
             const SizedBox(height: 50),
 
             // Email Text Field

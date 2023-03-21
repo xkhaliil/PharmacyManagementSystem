@@ -3,16 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pharmacymanagementsystem/login_screen/login.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
-  static String routeName="Splash";
+  static String routeName="/";
 
   @override
-  Widget build(BuildContext context) {
+    Widget build(BuildContext context) {
+    Future.delayed(const Duration(milliseconds: 2200), () {
+      Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName, (route) => false);
+    });
     return SafeArea(
       child: Scaffold(
-        body: Center( 
+        body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

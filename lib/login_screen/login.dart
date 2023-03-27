@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pharmacymanagementsystem/error_screen/error.dart';
+import 'package:pharmacymanagementsystem/home_screen/home.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key});
@@ -141,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen>
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, ErrorScreen.routeName);
+                        Navigator.pushNamed(context, HomeScreen.routeName);
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(

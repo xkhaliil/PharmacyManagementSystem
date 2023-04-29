@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pharmacymanagementsystem/home_screen/category.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -79,7 +80,7 @@ class HomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const ManageCategoriesPage()),
+                      builder: (context) =>  ManageCategoriesPage()),
                 );
               },
               child: Column(
@@ -172,45 +173,9 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class ManageCategoriesPage extends StatelessWidget {
-  const ManageCategoriesPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: const [ 
-            Text(
-              'Manage Categories',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Montserrat',
-                letterSpacing: 1.5,
-              ),
-            ),
-          ],
-        ),
-  
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF2B32B2), Color(0xFF1488CC)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              tileMode: TileMode.clamp,
-            ),
-          ),
-        ),
-        elevation: 0,
-      ),
-      body: const Center(
-        child: Text('This is the Manage Categories page.'),
-      ),
-    );
-  }
-}
+
+
 
 class ManageAccountsPage extends StatelessWidget {
   const ManageAccountsPage({super.key});

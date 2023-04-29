@@ -8,6 +8,8 @@ import 'package:pharmacymanagementsystem/home_screen/medicament.dart';
 import 'package:pharmacymanagementsystem/home_screen/sales.dart';
 import 'package:pharmacymanagementsystem/home_screen/stats.dart';
 
+import 'myAccount.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
   static String routeName = "Home";
@@ -51,7 +53,10 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              // Add your account button action here
+              Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => MyAccountScreen()),
+    );
             },
             icon: const Icon(Icons.account_circle),
           ),

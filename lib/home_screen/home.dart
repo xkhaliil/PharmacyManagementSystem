@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pharmacymanagementsystem/home_screen/account.dart';
 import 'package:pharmacymanagementsystem/home_screen/category.dart';
+import 'package:pharmacymanagementsystem/home_screen/medicament.dart';
+import 'package:pharmacymanagementsystem/home_screen/sales.dart';
+import 'package:pharmacymanagementsystem/home_screen/stats.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -177,162 +181,9 @@ class HomePage extends StatelessWidget {
 
 
 
-class ManageAccountsPage extends StatelessWidget {
-  const ManageAccountsPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: const [ 
-            Text(
-              'Manage Accounts',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Montserrat',
-                letterSpacing: 1.5,
-              ),
-            ),
-          ],
-        ),
-  
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF2B32B2), Color(0xFF1488CC)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              tileMode: TileMode.clamp,
-            ),
-          ),
-        ),
-        elevation: 0,
-      ),
-      body: const Center(
-        child: Text('This is the Manage account page.'),
-      ),
-    );
-  }
-}
 
-class ManageMedicamentsPage extends StatelessWidget {
-  const ManageMedicamentsPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: const [ 
-            Text(
-              'Manage Medicaments',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Montserrat',
-                letterSpacing: 1.5,
-              ),
-            ),
-          ],
-        ),
-  
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF2B32B2), Color(0xFF1488CC)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              tileMode: TileMode.clamp,
-            ),
-          ),
-        ),
-        elevation: 0,
-      ),
-      body: const Center(
-        child: Text('This is the Manage Medicaments page.'),
-      ),
-    );
-  }
-}
 
-class ManageSalesPage extends StatelessWidget {
-  const ManageSalesPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: const [ 
-            Text(
-              'Manage Sales',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Montserrat',
-                letterSpacing: 1.5,
-              ),
-            ),
-          ],
-        ),
-  
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF2B32B2), Color(0xFF1488CC)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              tileMode: TileMode.clamp,
-            ),
-          ),
-        ),
-        elevation: 0,
-      ),
-      body: const Center(
-        child: Text('This is the Manage Sales page.'),
-      ),
-    );
-  }
-}
 
-class ViewStatsPage extends StatelessWidget {
-  const ViewStatsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: const [ 
-            Text(
-              'Manage Stats',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Montserrat',
-                letterSpacing: 1.5,
-              ),
-            ),
-          ],
-        ),
-  
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF2B32B2), Color(0xFF1488CC)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              tileMode: TileMode.clamp,
-            ),
-          ),
-        ),
-        elevation: 0,
-      ),
-      body: const Center(
-        child: Text('This is the View Stats page.'),
-      ),
-    );
-  }
-}

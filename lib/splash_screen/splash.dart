@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pharmacymanagementsystem/error_screen/error.dart';
+import 'package:pharmacymanagementsystem/home_screen/home.dart';
 import 'package:pharmacymanagementsystem/login_screen/login.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -13,7 +14,7 @@ class SplashScreen extends StatelessWidget {
   @override
     Widget build(BuildContext context) {
     Future.delayed(const Duration(milliseconds: 2200), () {
-      Navigator.pushNamedAndRemoveUntil(context, ErrorScreen.routeName, (route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
     });
     return SafeArea(
       child: Scaffold(

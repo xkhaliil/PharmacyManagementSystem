@@ -64,6 +64,8 @@ flutter:
     - video/splash2.json
     - video/error.json
     - video/login.json
+    - images/
+    - video/logo.json
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

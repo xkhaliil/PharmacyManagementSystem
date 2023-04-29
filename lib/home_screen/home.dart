@@ -80,7 +80,7 @@ class HomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>  ManageCategoriesPage()),
+                      builder: (context) =>  const ManageCategoriesPage()),
                 );
               },
               child: Column(

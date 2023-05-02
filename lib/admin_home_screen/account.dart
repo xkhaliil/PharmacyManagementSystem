@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pharmacymanagementsystem/crud_screen/add/add_account.dart';
+import 'package:pharmacymanagementsystem/crud_screen/remove/remove_account.dart';
+import 'package:pharmacymanagementsystem/crud_screen/update/update_account.dart';
 
 class ManageAccountsPage extends StatelessWidget {
   const ManageAccountsPage({super.key});
@@ -55,14 +58,9 @@ class ManageAccountsPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
-                      child: Text(
-                        'Add',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, AddAccountScreen.routeName);
+                    },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.green,
@@ -70,16 +68,16 @@ class ManageAccountsPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
                       child: Text(
-                        'Update',
+                        'Add',
                         style: TextStyle(fontSize: 14),
                       ),
                     ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {Navigator.pushNamed(context, AccountUpdateScreen.routeName);},
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.blue,
@@ -87,21 +85,28 @@ class ManageAccountsPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
                       child: Text(
-                        'Remove',
+                        'Update',
                         style: TextStyle(fontSize: 14),
                       ),
                     ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {Navigator.pushNamed(context, AccountRemoveScreen.routeName);},
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.red,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
+                      child: Text(
+                        'Remove',
+                        style: TextStyle(fontSize: 14),
                       ),
                     ),
                   ),

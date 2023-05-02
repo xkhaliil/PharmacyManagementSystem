@@ -1,11 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:pharmacymanagementsystem/error_screen/error.dart';
-import 'package:pharmacymanagementsystem/home_screen/home.dart';
+import 'package:pharmacymanagementsystem/screens/error_screen/error.dart';
+import 'package:pharmacymanagementsystem/admin_home_screen/home.dart';
+import 'package:pharmacymanagementsystem/salesemployee_screen/emplyeHome.dart';
+import 'package:pharmacymanagementsystem/routes.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key});
-  static String routeName = "Login";
+  const LoginScreen({super.key});
+  static String routeName = "/Login";
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -13,6 +17,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   late final AnimationController _controller = AnimationController(
     duration: const Duration(seconds: 3),
     vsync: this,
@@ -22,6 +28,93 @@ class _LoginScreenState extends State<LoginScreen>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void signUserIn() async {
+    // show loading circle
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+
+    // try sign in
+    try {
+      await signInAutomatically();
+      //await signIn();
+      // ignore: unused_catch_clause
+    } on FirebaseAuthException catch (e) {
+      // pop the loading circle
+      Navigator.pop(context);
+      // show error message
+      Lottie.asset("");
+      showErrorMessage();
+    }
+  }
+
+  Future<void> signInAutomatically() async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: "ltaief.khalil@gmail.com",
+      password: "admin111",
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.pop(context);
+      if (FirebaseAuth.instance.currentUser?.email ==
+          "ltaief.khalil@gmail.com") {
+        Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (routes)=> false);
+      }
+    });
+  }
+
+  Future<void> signIn() async {
+    if (emailController.text == "ltaief.khalil@gmail.com") {
+      // _loginAsAdmin = true;
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pop(context);
+        if (FirebaseAuth.instance.currentUser?.email ==
+            "ltaief.khalil@gmail.com") {
+          Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (routes)=> false);
+        }
+      });
+    } else {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pop(context);
+        Navigator.pushNamedAndRemoveUntil(context, EmployeeHomeScreen.routeName, (routes)=> false);
+      });
+    }
+  }
+
+  // error message to user
+  void showErrorMessage() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        // ignore: prefer_const_constructors
+        return AlertDialog(
+          backgroundColor: const Color(0xFF393E46),
+          content: SizedBox(
+            height: 100,
+            child: Column(
+              children: [
+                const SizedBox(height: 16),
+                const Text("Impossible de se connecter"),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   bool _isObscure = true;
@@ -86,6 +179,7 @@ class _LoginScreenState extends State<LoginScreen>
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: TextField(
+                      controller: emailController,
                       decoration: InputDecoration(
                         hintText: 'Email',
                         prefixIcon: const Icon(Icons.email_outlined,
@@ -109,6 +203,7 @@ class _LoginScreenState extends State<LoginScreen>
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: TextField(
+                      controller: passwordController,
                       obscureText: _isObscure,
                       decoration: InputDecoration(
                         hintText: 'Password',
@@ -141,9 +236,7 @@ class _LoginScreenState extends State<LoginScreen>
                     width: 300,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, HomeScreen.routeName);
-                      },
+                      onPressed: signUserIn,
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
                             const Color(0xFF434242)),

@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:lottie/lottie.dart';
-import 'package:pharmacymanagementsystem/login_screen/login.dart';
+import 'package:pharmacymanagementsystem/screens/login_screen/login.dart';
 
 class ErrorScreen extends StatelessWidget {
-  const ErrorScreen({Key? key});
-  static String routeName = "error";
+  const ErrorScreen({super.key});
+  static String routeName = "/Error";
 
   @override
   Widget build(BuildContext context) {

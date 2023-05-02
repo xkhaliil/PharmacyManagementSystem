@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "601646203318",
+    "project_id": "pharmasync-16de1",
+    "storage_bucket": "pharmasync-16de1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:601646203318:android:65a31a9aed3ad50faec117",
+        "android_client_info": {
+          "package_name": "com.example.pharmacymanagementsystem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "601646203318-lumveai0bpp9uormpgohpq57ajhlh3it.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoKDIfVnm6UkmJHosAE8DA4xcr8Y6Sw8o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "601646203318-lumveai0bpp9uormpgohpq57ajhlh3it.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,12 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:pharmacymanagementsystem/crud_screen/add/add_account.dart';
-import 'package:pharmacymanagementsystem/crud_screen/remove/remove_account.dart';
-import 'package:pharmacymanagementsystem/crud_screen/update/update_account.dart';
+import 'package:pharmacymanagementsystem/data/account/account-source.dart';
+import '../crud_screen/add/add_account.dart';
+import '../crud_screen/update/update_account.dart';
+import '../data/preferences/shared_preferences.dart';
+import '../model/account/account.dart';
 
-class ManageAccountsPage extends StatelessWidget {
+class ManageAccountsPage extends StatefulWidget {
   const ManageAccountsPage({super.key});
 
-  static String routeName="account";
+  static String routeName = "account";
+
+  @override
+  State<ManageAccountsPage> createState() => _ManageAccountsPageState();
+}
+
+class _ManageAccountsPageState extends State<ManageAccountsPage> {
+  List<Account> accountList = List.empty();
+
+  @override
+  @mustCallSuper
+  void initState() {
+    super.initState();
+    AccountSource.getAllAccounts().then((accounts) {
+      setState(() {
+        accountList = accounts;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,56 +77,26 @@ class ManageAccountsPage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, AddAccountScreen.routeName);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.green,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, AddAccountScreen.routeName);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
-                      child: Text(
-                        'Add',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {Navigator.pushNamed(context, AccountUpdateScreen.routeName);},
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
-                      child: Text(
-                        'Update',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {Navigator.pushNamed(context, AccountRemoveScreen.routeName);},
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
-                      child: Text(
-                        'Remove',
-                        style: TextStyle(fontSize: 14),
+                      child: const Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 13),
+                        child: Text(
+                          'Add',
+                          style: TextStyle(fontSize: 14),
+                        ),
                       ),
                     ),
                   ),
@@ -116,22 +106,86 @@ class ManageAccountsPage extends StatelessWidget {
             const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
-                itemCount: 5,
+                itemCount: accountList.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
-                    elevation: 2,
-                    child: ListTile(
-                      title: Text('Account $index'),
-                      subtitle: const Text('descr'),
-                      trailing: const Icon(Icons.person),
-                    ),
-                  );
+                      elevation: 2,
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: Text(
+                                "${accountList[index].name} ${accountList[index].lastname}"),
+                            subtitle: Text(accountList[index].email),
+                            trailing: Wrap(
+                              spacing: 12, // space between two icons
+                              children: <Widget>[
+                                IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () {
+                                    tryRemoveAccount(accountList[index].id);
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.edit),
+                                  onPressed: () {
+                                    SharedPreferencesHelper.putSelectedId(accountList[index].id);
+                                    Navigator.pushNamed(
+                                        context, AccountUpdateScreen.routeName);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ));
                 },
               ),
             ),
+            Column(
+                children: accountList
+                    .map((account) => ListTile(title: Text(account.name)))
+                    .toList()),
           ],
         ),
       ),
+    );
+  }
+
+  void tryRemoveAccount(String id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete this account?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+                AccountSource.removeAccount(id).then((value) {
+                  setState(() {
+                    accountList.removeWhere((element) => element.id == id);
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Account deleted')),
+                  );
+                }, onError: (e) {
+                  return ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Failed.')),
+                  );
+                });
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

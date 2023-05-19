@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:pharmacymanagementsystem/admin_home_screen/home.dart';
-import 'package:pharmacymanagementsystem/salesemployee_screen/emplyeHome.dart';
-import 'package:pharmacymanagementsystem/screens/login_screen/login.dart';
+import '../../admin_home_screen/home.dart';
+import '../../salesemployee_screen/emplyeHome.dart';
+import '../login_screen/login.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});

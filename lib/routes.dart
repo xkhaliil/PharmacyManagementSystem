@@ -1,4 +1,3 @@
-import 'dart:js';
 
 import 'package:flutter/cupertino.dart';
 import 'package:pharmacymanagementsystem/admin_home_screen/myAccount.dart';
@@ -23,7 +22,4 @@ Map<String, WidgetBuilder> routes = {
   AddAccountScreen.routeName :(context) => const AddAccountScreen(),
   AccountUpdateScreen.routeName :(context) => const AccountUpdateScreen(),
   AccountRemoveScreen.routeName :(context) => const AccountRemoveScreen(),
-  
-
-  
 };

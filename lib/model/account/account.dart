@@ -2,19 +2,21 @@ import 'package:pharmacymanagementsystem/model/account/role.dart';
 
 class Account {
   final String id;
+  final String uid;
   late final String name;
-  final String surname;
+  final String lastname;
   final String email;
   final String password;
-  final String phoneNumber;
+  final String phone;
   final Role role;
   Account({
     required this.id,
+    required this.uid,
     required this.name,
-    required this.surname,
+    required this.lastname,
     required this.email,
     required this.password,
-    required this.phoneNumber,
+    required this.phone,
     required this.role,
   });
 
@@ -29,18 +31,19 @@ class Account {
   }) {
     return Account(
       id: id ?? this.id,
+      uid: uid ?? this.uid,
       name: name ?? this.name,
-      surname: surname ?? this.surname,
+      lastname: surname ?? this.lastname,
       email: email ?? this.email,
       password: password ?? this.password,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
+      phone: phoneNumber ?? this.phone,
       role: role ?? this.role,
     );
   }
 
   @override
   String toString() {
-    return 'Account(id: $id, name: $name, surname: $surname, email: $email, password: $password, phoneNumber: $phoneNumber, role: $role)';
+    return 'Account(id: $id, uid: $uid,name: $name, surname: $lastname, email: $email, password: $password, phoneNumber: $phone, role: $role)';
   }
 
   @override
@@ -49,22 +52,24 @@ class Account {
   
     return 
       other.id == id &&
+      other.uid == uid &&
       other.name == name &&
-      other.surname == surname &&
+      other.lastname == lastname &&
       other.email == email &&
       other.password == password &&
-      other.phoneNumber == phoneNumber &&
+      other.phone == phone &&
       other.role == role;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
+      uid.hashCode ^
       name.hashCode ^
-      surname.hashCode ^
+      lastname.hashCode ^
       email.hashCode ^
       password.hashCode ^
-      phoneNumber.hashCode ^
+      phone.hashCode ^
       role.hashCode;
   }
 }

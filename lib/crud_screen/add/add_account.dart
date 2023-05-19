@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pharmacymanagementsystem/model/account/account.dart';
+import '../../data/account/account-source.dart';
 
 enum Role {
   admin,
@@ -17,7 +17,7 @@ class AddAccountScreen extends StatefulWidget {
 class _AddAccountScreenState extends State<AddAccountScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _surnameController = TextEditingController();
+  final _lastnameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _phoneNumberController = TextEditingController();
@@ -27,12 +27,12 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Account'),
+        title: const Text('Create Account'),
       ),
       body: Center(
         child: SizedBox(
           child: Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Form(
               key: _formKey,
               child: Column(
@@ -40,7 +40,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                 children: [
                   TextFormField(
                     controller: _nameController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Enter your name',
                       labelText: 'Name',
                     ),
@@ -52,10 +52,10 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                     },
                   ),
                   TextFormField(
-                    controller: _surnameController,
-                    decoration: InputDecoration(
-                      hintText: 'Enter your surname',
-                      labelText: 'Surname',
+                    controller: _lastnameController,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your lastname',
+                      labelText: 'Lastname',
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -67,7 +67,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                   TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Enter your email',
                       labelText: 'Email',
                     ),
@@ -83,7 +83,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                   TextFormField(
                     controller: _passwordController,
                     obscureText: true,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Enter your password',
                       labelText: 'Password',
                     ),
@@ -99,7 +99,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                   TextFormField(
                     controller: _phoneNumberController,
                     keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Enter your phone number',
                       labelText: 'Phone Number',
                     ),
@@ -113,7 +113,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                     },
                   ),
                   SizedBox(height: 16.0),
-                  Text('Role'),
+                  const Text('Role'),
                   DropdownButton<Role>(
                     value: _selectedRole,
                     onChanged: (Role? value) {
@@ -129,10 +129,28 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                       );
                     }).toList(),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   ElevatedButton(
-                    onPressed: function,
-                    child: Text('Create Account'),
+                    onPressed: () {
+                      AccountSource.createAccount(
+                              _nameController.text,
+                              _lastnameController.text,
+                              _emailController.text,
+                              _phoneNumberController.text,
+                              _passwordController.text,
+                              _selectedRole.name)
+                          .then((value) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Success')),
+                        );
+                        clearText();
+                      }, onError: (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Failed')),
+                        );
+                      });
+                    },
+                    child: const Text('Create Account'),
                   ),
                 ],
               ),
@@ -144,4 +162,12 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
   }
 
   void function() {}
+
+  clearText() {
+    _nameController.clear();
+    _lastnameController.clear();
+    _emailController.clear();
+    _phoneNumberController.clear();
+    _passwordController.clear();
+  }
 }

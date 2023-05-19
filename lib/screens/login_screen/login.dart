@@ -1,11 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:pharmacymanagementsystem/screens/error_screen/error.dart';
 import 'package:pharmacymanagementsystem/admin_home_screen/home.dart';
 import 'package:pharmacymanagementsystem/salesemployee_screen/emplyeHome.dart';
-import 'package:pharmacymanagementsystem/routes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

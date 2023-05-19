@@ -1,35 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:pharmacymanagementsystem/data/account/account-source.dart';
 import 'package:pharmacymanagementsystem/model/account/account.dart';
 import 'package:pharmacymanagementsystem/model/account/role.dart';
+
+import '../../data/preferences/shared_preferences.dart';
 
 class AccountUpdateScreen extends StatefulWidget {
   const AccountUpdateScreen({Key? key}) : super(key: key);
   static String routeName = "/updateAccount";
 
   @override
-  _AccountUpdateScreenState createState() => _AccountUpdateScreenState();
+  State<AccountUpdateScreen> createState() => _AccountUpdateScreenState();
 }
 
 class _AccountUpdateScreenState extends State<AccountUpdateScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _surnameController = TextEditingController();
+  final _lastnameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   Role _selectedRole = Role.employee;
-  final List<Account> _accounts = [
-    Account(
-      id: "sqdqsdqd",
-      name: 'John',
-      surname: 'Doe',
-      email: "jhon@email.com",
-      password: "1234567890",
-      phoneNumber: "1231231",
-      role: Role.admin,
-    ),
-  ];
-  Account? _selectedAccount;
+
+  Account? account;
+  String? id;
+
+  @override
+  void initState() {
+    super.initState();
+    SharedPreferencesHelper.getSelectedId().then((accountId) {
+      id = accountId;
+      return AccountSource.getAccountById(accountId);
+    }).then((account) {
+      setState(() {
+        this.account = account;
+        _nameController.text = account.name;
+        _lastnameController.text = account.lastname;
+        _emailController.text = account.email;
+        _phoneNumberController.text = account.phone;
+        _selectedRole = account.role;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,27 +56,6 @@ class _AccountUpdateScreenState extends State<AccountUpdateScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                DropdownButton<Account>(
-                  value: _selectedAccount,
-                  onChanged: (Account? value) {
-                    setState(() {
-                      _selectedAccount = value;
-                      _nameController.text = value!.name;
-                      _surnameController.text = value.surname;
-                      _emailController.text = value.email;
-                      _passwordController.text = value.password;
-                      _phoneNumberController.text = value.phoneNumber;
-                      _selectedRole = value.role;
-                    });
-                  },
-                  items: _accounts
-                      .map<DropdownMenuItem<Account>>((Account account) {
-                    return DropdownMenuItem<Account>(
-                      value: account,
-                      child: Text('${account.name} ${account.surname}'),
-                    );
-                  }).toList(),
-                ),
                 TextFormField(
                   controller: _nameController,
                   decoration: const InputDecoration(
@@ -79,14 +70,14 @@ class _AccountUpdateScreenState extends State<AccountUpdateScreen> {
                   },
                 ),
                 TextFormField(
-                  controller: _surnameController,
+                  controller: _lastnameController,
                   decoration: const InputDecoration(
-                    hintText: 'Enter your surname',
-                    labelText: 'Surname',
+                    hintText: 'Enter your lastname',
+                    labelText: 'Lastname',
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your surname';
+                      return 'Please enter your lastname';
                     }
                     return null;
                   },
@@ -152,11 +143,21 @@ class _AccountUpdateScreenState extends State<AccountUpdateScreen> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Account updated'),
-                        ),
-                      );
+                      AccountSource.updateAccount(
+                              id!,
+                              _nameController.text,
+                              _lastnameController.text,
+                              _emailController.text,
+                              _phoneNumberController.text,
+                              _passwordController.text,
+                              _selectedRole.name)
+                          .then((value) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Account updated'),
+                          ),
+                        );
+                      });
                     }
                   },
                   child: const Text('Update'),

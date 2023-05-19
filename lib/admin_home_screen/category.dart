@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ManageCategoriesPage extends StatelessWidget {
-  const ManageCategoriesPage({Key? key});
+class ManageCategoriesScreen extends StatelessWidget {
+  const ManageCategoriesScreen({Key? key});
   static String routeName="category";
 
   @override

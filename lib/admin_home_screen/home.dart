@@ -12,6 +12,7 @@ import 'myAccount.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
   static String routeName = "/Home";
 
   @override
@@ -22,10 +23,12 @@ class HomeScreen extends StatelessWidget {
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
-Future<void> signOut() async {
+
+  Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
     print('User is currently signed out!');
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +59,8 @@ Future<void> signOut() async {
           IconButton(
             onPressed: () {
               signOut();
-              Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName, (route) => false);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, LoginScreen.routeName, (route) => false);
             },
             icon: const Icon(Icons.logout),
           ),
@@ -77,7 +81,6 @@ Future<void> signOut() async {
         child: SizedBox(
           height: 1000,
           width: 500,
-          
           child: GridView.count(
             crossAxisCount: 2,
             padding: const EdgeInsets.all(16.0),
@@ -85,17 +88,15 @@ Future<void> signOut() async {
               Card(
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ManageCategoriesPage()),
-                    );
+                    Navigator.pushNamed(
+                        context, ManageCategoriesScreen.routeName);
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const <Widget>[
                       Icon(Icons.category, size: 64.0),
-                      Text('Manage Categories', style: TextStyle(fontSize: 16.0)),
+                      Text('Manage Categories',
+                          style: TextStyle(fontSize: 16.0)),
                     ],
                   ),
                 ),
@@ -103,17 +104,15 @@ Future<void> signOut() async {
               Card(
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ManageMedicamentsPage()),
-                    );
+                    Navigator.pushNamed(
+                        context, ManageMedicamentsScreen.routeName);
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const <Widget>[
                       Icon(Icons.medical_services, size: 64.0),
-                      Text('Manage Medicaments', style: TextStyle(fontSize: 16.0)),
+                      Text('Manage Medicaments',
+                          style: TextStyle(fontSize: 16.0)),
                     ],
                   ),
                 ),
@@ -121,11 +120,7 @@ Future<void> signOut() async {
               Card(
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ManageSalesPage()),
-                    );
+                    Navigator.pushNamed(context, ManageSalesScreen.routeName);
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -142,7 +137,7 @@ Future<void> signOut() async {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const StatisticsPage()),
+                          builder: (context) => const StatisticsScreen()),
                     );
                   },
                   child: Column(
@@ -159,17 +154,15 @@ Future<void> signOut() async {
                 child: Card(
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ManageAccountsPage()),
-                      );
+                      Navigator.pushNamed(
+                          context, ManageAccountsScreen.routeName);
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const <Widget>[
                         Icon(Icons.account_circle, size: 64.0),
-                        Text('Manage Accounts', style: TextStyle(fontSize: 16.0)),
+                        Text('Manage Accounts',
+                            style: TextStyle(fontSize: 16.0)),
                       ],
                     ),
                   ),

@@ -7,66 +7,32 @@ import '../login_screen/login.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
+
   static String routeName = "/";
 
   @override
   Widget build(BuildContext context) {
     Future.delayed(const Duration(milliseconds: 2200), () {
-     var currentUser = FirebaseAuth.instance.currentUser;
+      var currentUser = FirebaseAuth.instance.currentUser;
 
       if (currentUser != null) {
-        if(currentUser.email?.startsWith("ltaief.khalil@gmail.com") ?? false){
-          Navigator.pushAndRemoveUntil(
-          context,
-          PageRouteBuilder(
-            transitionDuration: const Duration(milliseconds: 100),
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return const HomePage();
-            },
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              return FadeTransition(
-                opacity: animation,
-                child: child,
-              );
-            },
-          ),
-          (route) => false,
-        );
-        }else {Navigator.pushAndRemoveUntil(
-          context,
-          PageRouteBuilder(
-            transitionDuration: const Duration(milliseconds: 100),
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return const EmployeeHomeScreen();
-            },
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              return FadeTransition(
-                opacity: animation,
-                child: child,
-              );
-            },
-          ),
-          (route) => false,
-        );}
-        
+        if (currentUser.email?.startsWith("ltaief.khalil@gmail.com") ?? false) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            HomeScreen.routeName,
+            (route) => false,
+          );
+        } else {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            EmployeeHomeScreen.routeName,
+            (route) => false,
+          );
+        }
       } else {
-        Navigator.pushAndRemoveUntil(
+        Navigator.pushNamedAndRemoveUntil(
           context,
-          PageRouteBuilder(
-            transitionDuration: const Duration(milliseconds: 100),
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return const LoginScreen();
-            },
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              return FadeTransition(
-                opacity: animation,
-                child: child,
-              );
-            },
-          ),
+          LoginScreen.routeName,
           (route) => false,
         );
       }

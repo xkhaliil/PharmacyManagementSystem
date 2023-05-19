@@ -4,6 +4,7 @@ import 'package:pharmacymanagementsystem/admin_home_screen/myAccount.dart';
 
 class EmployeeHomeScreen extends StatelessWidget {
   const EmployeeHomeScreen({super.key});
+
   static String routeName = "/Sales";
 
   @override
@@ -29,11 +30,7 @@ class EmployeeHomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const MyAccountScreen()),
-              );
+              Navigator.pushNamed(context, MyAccountScreen.routeName);
             },
             icon: const Icon(Icons.account_circle),
           ),

@@ -5,16 +5,16 @@ import '../crud_screen/update/update_account.dart';
 import '../data/preferences/shared_preferences.dart';
 import '../model/account/account.dart';
 
-class ManageAccountsPage extends StatefulWidget {
-  const ManageAccountsPage({super.key});
+class ManageAccountsScreen extends StatefulWidget {
+  const ManageAccountsScreen({super.key});
 
   static String routeName = "account";
 
   @override
-  State<ManageAccountsPage> createState() => _ManageAccountsPageState();
+  State<ManageAccountsScreen> createState() => _ManageAccountsScreenState();
 }
 
-class _ManageAccountsPageState extends State<ManageAccountsPage> {
+class _ManageAccountsScreenState extends State<ManageAccountsScreen> {
   List<Account> accountList = List.empty();
 
   @override

@@ -3,8 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:pharmacymanagementsystem/admin_home_screen/myAccount.dart';
 import 'package:pharmacymanagementsystem/admin_home_screen/stats.dart';
 import 'package:pharmacymanagementsystem/crud_screen/add/add_account.dart';
+import 'package:pharmacymanagementsystem/crud_screen/add/add_category.dart';
+import 'package:pharmacymanagementsystem/crud_screen/add/add_medicament.dart';
+import 'package:pharmacymanagementsystem/crud_screen/add/add_sale.dart';
 import 'package:pharmacymanagementsystem/crud_screen/remove/remove_account.dart';
 import 'package:pharmacymanagementsystem/crud_screen/update/update_account.dart';
+import 'package:pharmacymanagementsystem/crud_screen/update/update_category.dart';
+import 'package:pharmacymanagementsystem/crud_screen/update/update_medicament.dart';
+import 'package:pharmacymanagementsystem/crud_screen/update/update_sale.dart';
+
+
 import 'package:pharmacymanagementsystem/screens/error_screen/error.dart';
 import 'package:pharmacymanagementsystem/admin_home_screen/home.dart';
 import 'package:pharmacymanagementsystem/salesemployee_screen/emplyeHome.dart';
@@ -33,4 +41,11 @@ Map<String, WidgetBuilder> routes = {
   ManageCategoriesScreen.routeName :(context) => const ManageCategoriesScreen(),
   ManageMedicamentsScreen.routeName :(context) => const ManageMedicamentsScreen(),
   ManageSalesScreen.routeName :(context) => const ManageSalesScreen(),
+  AddCategoryScreen.routeName :(context) => const AddCategoryScreen(),
+  AddMedicamentScreen.routeName  :(context) =>  const AddMedicamentScreen(),
+  CategoryUpdateScreen.routeName :(context) => const CategoryUpdateScreen(),
+  MedicamentUpdateScreen.routeName :(context) =>  const MedicamentUpdateScreen(),
+  AddSaleScreen.routeName :(context) => const AddSaleScreen(),
+  UpdateSaleScreen.routeName  :(context) => const UpdateSaleScreen(),
+  
 };

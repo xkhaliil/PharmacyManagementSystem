@@ -1,25 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:pharmacymanagementsystem/data/medicament/medicament-source.dart';
+import 'package:pharmacymanagementsystem/model/medicament/medicament.dart';
+import '../crud_screen/add/add_medicament.dart';
+import '../crud_screen/update/update_medicament.dart';
+import '../data/preferences/shared_preferences.dart';
 
-class ManageMedicamentsScreen extends StatelessWidget {
-  const ManageMedicamentsScreen({super.key});
-  static String routeName = "medication";
+class ManageMedicamentsScreen extends StatefulWidget {
+  const ManageMedicamentsScreen({Key? key}) : super(key: key);
+
+  static String routeName = "medicament";
+
+  @override
+  State<ManageMedicamentsScreen> createState() => _ManageMedicamentsScreenState();
+}
+
+class _ManageMedicamentsScreenState extends State<ManageMedicamentsScreen> {
+  List<Medicament> medicamentList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    MedicamentSource.getAllMedicaments().then((medicaments) {
+      setState(() {
+        medicamentList = medicaments;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: const [
-            Text(
-              'Manage Medications',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Montserrat',
-                letterSpacing: 1.5,
-              ),
-            ),
-          ],
+        title: const Text(
+          'Manage Medicaments',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Montserrat',
+            letterSpacing: 1.5,
+          ),
         ),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -53,54 +72,25 @@ class ManageMedicamentsScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
-                      child: Text(
-                        'Add',
-                        style: TextStyle(fontSize: 14),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, AddMedicamentScreen.routeName);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.blueAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
-                      child: Text(
-                        'Update',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.green,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
-                      child: Text(
-                        'Remove',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.redAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
+                        child: Text(
+                          'Add',
+                          style: TextStyle(fontSize: 14),
+                        ),
                       ),
                     ),
                   ),
@@ -110,14 +100,34 @@ class ManageMedicamentsScreen extends StatelessWidget {
             const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
-                itemCount: 5,
+                itemCount: medicamentList.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
                     elevation: 2,
-                    child: ListTile(
-                      title: Text('Medication $index'),
-                      subtitle: const Text('descr'),
-                      trailing: const Icon(Icons.medical_services),
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: Text(medicamentList[index].name),
+                          trailing: Wrap(
+                            spacing: 12,
+                            children: <Widget>[
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  tryRemoveMedicament(medicamentList[index].id);
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () {
+                                  SharedPreferencesHelper.putSelectedId(medicamentList[index].id);
+                                   Navigator.pushNamed(context, MedicamentUpdateScreen.routeName);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 },
@@ -126,6 +136,44 @@ class ManageMedicamentsScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void tryRemoveMedicament(String id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete this medicament?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+                MedicamentSource.removeMedicament(id).then((value) {
+                  setState(() {
+                    medicamentList.removeWhere((element) => element.id == id);
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Medicament deleted')),
+                  );
+                }).catchError((e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Failed')),
+                  );
+                });
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

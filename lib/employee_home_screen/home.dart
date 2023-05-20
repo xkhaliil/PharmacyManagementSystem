@@ -7,7 +7,6 @@ import 'package:pharmacymanagementsystem/admin_home_screen/medicament.dart';
 import 'package:pharmacymanagementsystem/admin_home_screen/myAccount.dart';
 import 'package:pharmacymanagementsystem/admin_home_screen/sales.dart';
 import 'package:pharmacymanagementsystem/admin_home_screen/stats.dart';
-
 import 'package:pharmacymanagementsystem/screens/login_screen/login.dart';
 
 class HomeScreen extends StatelessWidget {

@@ -1,27 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:pharmacymanagementsystem/data/sale/sale-source.dart';
+import '../crud_screen/add/add_sale.dart';
+import '../crud_screen/update/update_sale.dart';
+import '../data/preferences/shared_preferences.dart';
+import '../model/sale/sale.dart';
 
-class ManageSalesScreen extends StatelessWidget {
-  const ManageSalesScreen({super.key});
+class ManageSalesScreen extends StatefulWidget {
+  const ManageSalesScreen({Key? key});
 
+  static String routeName = "sale";
 
-  static String routeName = "sales";
+  @override
+  State<ManageSalesScreen> createState() => _ManageSalesScreenState();
+}
+
+class _ManageSalesScreenState extends State<ManageSalesScreen> {
+  List<Sale> saleList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    SaleSource.getAllSales().then((sales) {
+      setState(() {
+        saleList = sales;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: const [
-            Text(
-              'Manage Sales',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Montserrat',
-                letterSpacing: 1.5,
-              ),
-            ),
-          ],
+        title: const Text(
+          'Manage Sales',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Montserrat',
+            letterSpacing: 1.5,
+          ),
         ),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -55,54 +72,26 @@ class ManageSalesScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
-                      child: Text(
-                        'Add',
-                        style: TextStyle(fontSize: 14),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                         Navigator.pushNamed(context, AddSaleScreen.routeName);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Color.fromARGB(255, 0, 100, 18),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
-                      child: Text(
-                        'Update',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Color.fromARGB(255, 147, 180, 255),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
-                      child: Text(
-                        'Remove',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Color.fromARGB(255, 182, 77, 77),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                      child: const Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 13),
+                        child: Text(
+                          'Add',
+                          style: TextStyle(fontSize: 14),
+                        ),
                       ),
                     ),
                   ),
@@ -112,14 +101,40 @@ class ManageSalesScreen extends StatelessWidget {
             const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
-                itemCount: 5,
+                itemCount: saleList.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
                     elevation: 2,
-                    child: ListTile(
-                      title: Text('Sale $index'),
-                      subtitle: const Text('descr'),
-                      trailing: const Icon(Icons.money),
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: Text(
+                            "${saleList[index].medicamentName}",
+                          ),
+                          subtitle: Text(
+                            "${saleList[index].salesmanName}",
+                          ),
+                          trailing: Wrap(
+                            spacing: 12, // space between two icons
+                            children: <Widget>[
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  tryRemoveSale(saleList[index].id);
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () {
+                                  SharedPreferencesHelper.putSelectedId(
+                                      saleList[index].id);
+                                  // Navigator.pushNamed(context,SaleUpdateScreen.routeName, );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 },
@@ -128,6 +143,44 @@ class ManageSalesScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void tryRemoveSale(String id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete this sale?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+                SaleSource.removeSale(id).then((_) {
+                  setState(() {
+                    saleList.removeWhere((sale) => sale.id == id);
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Sale deleted')),
+                  );
+                }).catchError((e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Failed to delete sale')),
+                  );
+                });
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

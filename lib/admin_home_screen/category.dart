@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ManageCategoriesPage extends StatelessWidget {
-  const ManageCategoriesPage({Key? key});
+class ManageCategoriesScreen extends StatelessWidget {
+  const ManageCategoriesScreen({Key? key});
   static String routeName="category";
 
   @override
@@ -55,6 +55,12 @@ class ManageCategoriesPage extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white, backgroundColor: Color.fromARGB(255, 0, 100, 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
                       child: Text(
@@ -62,15 +68,15 @@ class ManageCategoriesPage extends StatelessWidget {
                         style: TextStyle(fontSize: 14),
                       ),
                     ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Color.fromARGB(255, 0, 100, 18),
+                      foregroundColor: Colors.white, backgroundColor: Color.fromARGB(255, 147, 180, 255),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
                       child: Text(
@@ -78,26 +84,20 @@ class ManageCategoriesPage extends StatelessWidget {
                         style: TextStyle(fontSize: 14),
                       ),
                     ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Color.fromARGB(255, 147, 180, 255),
+                      foregroundColor: Colors.white, backgroundColor: Color.fromARGB(255, 182, 77, 77),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
                       child: Text(
                         'Remove',
                         style: TextStyle(fontSize: 14),
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Color.fromARGB(255, 182, 77, 77),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                   ),

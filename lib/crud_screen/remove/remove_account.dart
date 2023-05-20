@@ -2,40 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:pharmacymanagementsystem/model/account/account.dart';
 import 'package:pharmacymanagementsystem/model/account/role.dart';
 
-
+import '../../data/account/account-source.dart';
 
 class AccountRemoveScreen extends StatefulWidget {
   const AccountRemoveScreen({Key? key}) : super(key: key);
   static String routeName = "/removeAccount";
 
   @override
-  _AccountRemoveScreenState createState() => _AccountRemoveScreenState();
+  State<AccountRemoveScreen> createState() => _AccountRemoveScreenState();
 }
 
 class _AccountRemoveScreenState extends State<AccountRemoveScreen> {
   final _formKey = GlobalKey<FormState>();
-  final List<Account> _accounts = [
-    Account(
-      id: "sqdqsdqd",
-      name: 'John',
-      surname: 'Doe',
-      email: "jhon@email.com",
-      password: "1234567890",
-      phoneNumber: "1231231",
-      role: Role.admin,
-             
-    ),
-  ];
   Account? _selectedAccount;
+  List<Account> accountList = List.empty();
+
+  @override
+  @mustCallSuper
+  void initState() {
+    super.initState();
+    AccountSource.getAllAccounts().then((accounts) {
+      setState(() {
+        accountList = accounts;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Remove Account'),
+        title: const Text('Remove Account'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -48,11 +48,11 @@ class _AccountRemoveScreenState extends State<AccountRemoveScreen> {
                     _selectedAccount = value;
                   });
                 },
-                items:
-                    _accounts.map<DropdownMenuItem<Account>>((Account account) {
+                items: accountList
+                    .map<DropdownMenuItem<Account>>((Account account) {
                   return DropdownMenuItem<Account>(
                     value: account,
-                    child: Text('${account.name} ${account.surname}'),
+                    child: Text('${account.name} ${account.lastname}'),
                   );
                 }).toList(),
               ),
@@ -64,36 +64,43 @@ class _AccountRemoveScreenState extends State<AccountRemoveScreen> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Confirm Delete'),
-                          content: Text(
+                          title: const Text('Confirm Delete'),
+                          content: const Text(
                               'Are you sure you want to delete this account?'),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop(false);
                               },
-                              child: Text('Cancel'),
+                              child: const Text('Cancel'),
                             ),
                             TextButton(
                               onPressed: () {
-                                setState(() {
-                                  _accounts.remove(_selectedAccount);
-                                  _selectedAccount = null;
-                                });
                                 Navigator.of(context).pop(true);
+                                AccountSource.removeAccount(
+                                        _selectedAccount!.id)
+                                    .then((value) {
+                                  setState(() {
+                                    accountList.remove(_selectedAccount);
+                                    _selectedAccount = null;
+                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Account deleted')),
+                                  );
+                                }, onError: (e) {
+                                  return ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    const SnackBar(content: Text('Failed.')),
+                                  );
+                                });
                               },
-                              child: Text('Delete'),
+                              child: const Text('Delete'),
                             ),
                           ],
                         );
                       },
-                    ).then((confirmed) {
-                      if (confirmed == true) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Account deleted')),
-                        );
-                      }
-                    });
+                    );
                   }
                 },
                 child: Text('Delete Account'),

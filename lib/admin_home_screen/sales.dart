@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ManageSalesPage extends StatelessWidget {
-  const ManageSalesPage({super.key});
+class ManageSalesScreen extends StatelessWidget {
+  const ManageSalesScreen({super.key});
 
 
   static String routeName = "sales";

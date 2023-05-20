@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ManageMedicamentsPage extends StatelessWidget {
-  const ManageMedicamentsPage({super.key});
+class ManageMedicamentsScreen extends StatelessWidget {
+  const ManageMedicamentsScreen({super.key});
   static String routeName = "medication";
 
   @override

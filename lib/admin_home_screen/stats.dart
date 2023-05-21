@@ -1,9 +1,37 @@
-import 'package:flutter/material.dart';
+import 'dart:collection';
 
-class StatisticsScreen extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:pharmacymanagementsystem/data/sale/sale-source.dart';
+import 'package:pharmacymanagementsystem/model/sale/sale.dart';
+import 'package:collection/collection.dart';
+
+class StatisticsScreen extends StatefulWidget {
   const StatisticsScreen({Key? key}) : super(key: key);
 
   static String routeName = "/statistics";
+
+  @override
+  State<StatisticsScreen> createState() => _StatisticsScreenState();
+}
+
+class _StatisticsScreenState extends State<StatisticsScreen> {
+  List<Sale> sales = List.empty();
+  String totalSale = "";
+  String salesToday = "";
+  String salesYesterday = "";
+  Map<String, String> topSales = {};
+
+  @override
+  void initState() {
+    super.initState();
+    SaleSource.getAllSales().then((value) => setState(() {
+          sales = value;
+          totalSale = calculateTotalSales();
+          salesToday = calculateSalesToday();
+          salesYesterday = calculateSalesYesterday();
+          calculateTopSales();
+        }));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +64,9 @@ class StatisticsScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                '\ total sales here ',
-                style: TextStyle(
+              Text(
+                "$totalSale Dinars",
+                style: const TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                   color: Colors.green,
@@ -72,18 +100,18 @@ class StatisticsScreen extends StatelessWidget {
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             'Today',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
-                            '\$2,000',
-                            style: TextStyle(
+                            "$salesToday Dinars",
+                            style: const TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
                               color: Colors.green,
@@ -110,18 +138,18 @@ class StatisticsScreen extends StatelessWidget {
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             'Yesterday',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
-                            '\$1,500',
-                            style: TextStyle(
+                            "$salesYesterday Dinars",
+                            style: const TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
                               color: Colors.green,
@@ -134,7 +162,6 @@ class StatisticsScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 32),
-              
               const Text(
                 'Top Selling Products',
                 style: TextStyle(
@@ -157,35 +184,11 @@ class StatisticsScreen extends StatelessWidget {
                   color: Colors.white,
                 ),
                 child: ListView(
-                  children: [
-                    _buildTopSellingProductItem(
-                      name: 'Product A',
-                      sales: 100,
-                      imageUrl: 'https://picsum.photos/200?random=1',
-                    ),
-                    _buildTopSellingProductItem(
-                      name: 'Product B',
-                      sales: 90,
-                      imageUrl: 'https://picsum.photos/200?random=2',
-                    ),
-                    _buildTopSellingProductItem(
-                      name: 'Product C',
-                      sales: 80,
-                      imageUrl: 'https://picsum.photos/200?random=3',
-                    ),
-                    _buildTopSellingProductItem(
-                      name: 'Product D',
-                      sales: 70,
-                      imageUrl: 'https://picsum.photos/200?random=4',
-                    ),
-                    _buildTopSellingProductItem(
-                      name: 'Product E',
-                      sales: 60,
-                      imageUrl: 'https://picsum.photos/200?random=5',
-                    ),
-                  ],
+                  children: sorted(topSales).keys
+                      .mapIndexed((i, e) => _buildTopSellingProductItem(
+                          name: e, sales: topSales[e] ?? "", imageUrl: "https://picsum.photos/200?random=$e"))
+                      .toList(),
                 ),
-                
               ),
             ],
           ),
@@ -195,7 +198,7 @@ class StatisticsScreen extends StatelessWidget {
   }
 
   Widget _buildTopSellingProductItem(
-      {required String name, required int sales, required String imageUrl}) {
+      {required String name, required String sales, required String imageUrl}) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -232,5 +235,54 @@ class StatisticsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String calculateTotalSales() => sales
+      .map((e) => e.finalPrice)
+      .toList()
+      .reduce((a, b) => a + b)
+      .toString();
+
+  String calculateSalesToday() => sales
+      .toList()
+      .where((element) => sameDay(element.date))
+      .map((e) => e.finalPrice)
+      .reduce((a, b) => a + b)
+      .toString();
+
+  String calculateSalesYesterday() {
+    var yesterdaysSales =
+        sales.where((element) => yesterday(element.date)).toList();
+    if (yesterdaysSales.isNotEmpty) {
+      return yesterdaysSales
+          .map((e) => e.finalPrice)
+          .reduce((a, b) => a + b)
+          .toString();
+    } else {
+      return "0";
+    }
+  }
+
+  bool sameDay(DateTime date) =>
+      date.day == DateTime.now().day &&
+      date.year == DateTime.now().year &&
+      date.month == DateTime.now().month;
+
+  bool yesterday(DateTime date) =>
+      date.day == DateTime.now().subtract(const Duration(days: 1)).day &&
+      date.year == DateTime.now().year &&
+      date.month == DateTime.now().month;
+
+  calculateTopSales() => sales
+          .groupListsBy((element) => element.medicamentName)
+          .forEach((key, values) {
+        topSales[key] = values
+            .map<int>((element) => element.medicamentQuantity)
+            .reduce((a, b) => a + b)
+            .toString();
+      });
+
+  Map<String, String> sorted(Map<String, String> map) {
+    return SplayTreeMap.from(map, (a, b) => map[b]!.compareTo(map[a]!));
   }
 }

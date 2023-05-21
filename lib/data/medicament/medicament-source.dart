@@ -77,4 +77,23 @@ class MedicamentSource {
       onError: (e) => print("Error completing: $e"),
     );
   }
+
+  static Future<List<Medicament>> getMedicamentByCategory(
+      String categoryId) async {
+    return db
+        .collection(medicamentCollection)
+        .where("idCategory", isEqualTo: categoryId)
+        .get()
+        .then(
+          (medicaments) => medicaments.docs
+              .map((element) => Medicament(
+                    id: element.id,
+                    name: element.data()["name"],
+                    price: element.data()["price"].toDouble(),
+                    idCategory: element.data()["idCategory"],
+                  ))
+              .toList(),
+          onError: (e) => print("Error while getMedicamentByCategory: $e"),
+        );
+  }
 }

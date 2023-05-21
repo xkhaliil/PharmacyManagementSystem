@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pharmacymanagementsystem/data/sale/sale-source.dart';
 import '../crud_screen/add/add_sale.dart';
-import '../crud_screen/update/update_sale.dart';
-import '../data/preferences/shared_preferences.dart';
 import '../model/sale/sale.dart';
 
 class ManageSalesScreen extends StatefulWidget {
-  const ManageSalesScreen({Key? key});
+  const ManageSalesScreen({super.key});
 
   static String routeName = "sale";
 
@@ -15,16 +13,12 @@ class ManageSalesScreen extends StatefulWidget {
 }
 
 class _ManageSalesScreenState extends State<ManageSalesScreen> {
-  List<Sale> saleList = [];
+  List<Sale> saleList = List.empty();
 
   @override
   void initState() {
     super.initState();
-    SaleSource.getAllSales().then((sales) {
-      setState(() {
-        saleList = sales;
-      });
-    });
+    updateSales();
   }
 
   @override
@@ -76,7 +70,8 @@ class _ManageSalesScreenState extends State<ManageSalesScreen> {
                     padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton(
                       onPressed: () {
-                         Navigator.pushNamed(context, AddSaleScreen.routeName);
+                        Navigator.pushNamed(context, AddSaleScreen.routeName)
+                            .then((value) => updateSales());
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
@@ -109,10 +104,10 @@ class _ManageSalesScreenState extends State<ManageSalesScreen> {
                       children: [
                         ListTile(
                           title: Text(
-                            "${saleList[index].medicamentName}",
+                            saleList[index].medicamentName,
                           ),
                           subtitle: Text(
-                            "${saleList[index].salesmanName}",
+                            saleList[index].finalPrice.toString(),
                           ),
                           trailing: Wrap(
                             spacing: 12, // space between two icons
@@ -121,14 +116,6 @@ class _ManageSalesScreenState extends State<ManageSalesScreen> {
                                 icon: const Icon(Icons.delete),
                                 onPressed: () {
                                   tryRemoveSale(saleList[index].id);
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () {
-                                  SharedPreferencesHelper.putSelectedId(
-                                      saleList[index].id);
-                                  // Navigator.pushNamed(context,SaleUpdateScreen.routeName, );
                                 },
                               ),
                             ],
@@ -182,5 +169,13 @@ class _ManageSalesScreenState extends State<ManageSalesScreen> {
         );
       },
     );
+  }
+
+  updateSales() {
+    SaleSource.getAllSales().then((sales) {
+      setState(() {
+        saleList = sales;
+      });
+    });
   }
 }

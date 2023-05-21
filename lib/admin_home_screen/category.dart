@@ -5,7 +5,6 @@ import '../crud_screen/add/add_category.dart';
 import '../crud_screen/update/update_category.dart';
 import '../data/preferences/shared_preferences.dart';
 
-
 class ManageCategoriesScreen extends StatefulWidget {
   const ManageCategoriesScreen({Key? key}) : super(key: key);
 
@@ -21,6 +20,10 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> {
   @override
   void initState() {
     super.initState();
+    getAllcategories();
+  }
+
+  void getAllcategories() {
     CategorySource.getAllCategories().then((categories) {
       setState(() {
         categoryList = categories;
@@ -77,7 +80,9 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> {
                     padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, AddCategoryScreen.routeName);
+                        Navigator.pushNamed(
+                                context, AddCategoryScreen.routeName)
+                            .then((value) => getAllcategories());
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
@@ -87,7 +92,8 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> {
                         ),
                       ),
                       child: const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 13),
                         child: Text(
                           'Add',
                           style: TextStyle(fontSize: 14),
@@ -121,8 +127,10 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> {
                               IconButton(
                                 icon: const Icon(Icons.edit),
                                 onPressed: () {
-                                  SharedPreferencesHelper.putSelectedId(categoryList[index].id);
-                                  Navigator.pushNamed(context, CategoryUpdateScreen.routeName);
+                                  SharedPreferencesHelper.putSelectedId(
+                                      categoryList[index].id);
+                                  Navigator.pushNamed(
+                                      context, CategoryUpdateScreen.routeName);
                                 },
                               ),
                             ],

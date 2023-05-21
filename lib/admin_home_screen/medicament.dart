@@ -11,7 +11,8 @@ class ManageMedicamentsScreen extends StatefulWidget {
   static String routeName = "medicament";
 
   @override
-  State<ManageMedicamentsScreen> createState() => _ManageMedicamentsScreenState();
+  State<ManageMedicamentsScreen> createState() =>
+      _ManageMedicamentsScreenState();
 }
 
 class _ManageMedicamentsScreenState extends State<ManageMedicamentsScreen> {
@@ -20,6 +21,10 @@ class _ManageMedicamentsScreenState extends State<ManageMedicamentsScreen> {
   @override
   void initState() {
     super.initState();
+    updateAllMedicaments();
+  }
+
+  void updateAllMedicaments() {
     MedicamentSource.getAllMedicaments().then((medicaments) {
       setState(() {
         medicamentList = medicaments;
@@ -76,7 +81,9 @@ class _ManageMedicamentsScreenState extends State<ManageMedicamentsScreen> {
                     padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, AddMedicamentScreen.routeName);
+                        Navigator.pushNamed(
+                                context, AddMedicamentScreen.routeName)
+                            .then((value) => updateAllMedicaments());
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
@@ -86,7 +93,8 @@ class _ManageMedicamentsScreenState extends State<ManageMedicamentsScreen> {
                         ),
                       ),
                       child: const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 13),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 13),
                         child: Text(
                           'Add',
                           style: TextStyle(fontSize: 14),
@@ -120,8 +128,10 @@ class _ManageMedicamentsScreenState extends State<ManageMedicamentsScreen> {
                               IconButton(
                                 icon: const Icon(Icons.edit),
                                 onPressed: () {
-                                  SharedPreferencesHelper.putSelectedId(medicamentList[index].id);
-                                   Navigator.pushNamed(context, MedicamentUpdateScreen.routeName);
+                                  SharedPreferencesHelper.putSelectedId(
+                                      medicamentList[index].id);
+                                  Navigator.pushNamed(context,
+                                      MedicamentUpdateScreen.routeName);
                                 },
                               ),
                             ],
@@ -145,7 +155,8 @@ class _ManageMedicamentsScreenState extends State<ManageMedicamentsScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirm Delete'),
-          content: const Text('Are you sure you want to delete this medicament?'),
+          content:
+              const Text('Are you sure you want to delete this medicament?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {

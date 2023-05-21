@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:pharmacymanagementsystem/data/medicament/medicament-source.dart';
-
-
-
+import '../../data/category/category-source.dart';
+import '../../data/medicament/medicament-source.dart';
 import '../../data/preferences/shared_preferences.dart';
+import '../../model/medicament/category.dart';
 import '../../model/medicament/medicament.dart';
 
 class MedicamentUpdateScreen extends StatefulWidget {
-    const MedicamentUpdateScreen({Key? key}) : super(key: key);
+  const MedicamentUpdateScreen({Key? key}) : super(key: key);
 
   static String routeName = "/updateMedicament";
 
@@ -20,29 +19,24 @@ class _MedicamentUpdateScreenState extends State<MedicamentUpdateScreen> {
   final _formKey = GlobalKey<FormState>();
   final _medicamentNameController = TextEditingController();
   final _medicamentPriceController = TextEditingController();
- 
-
-
   Medicament? medicament;
-  String? medicamentId;
+  List<Category> categories = List.empty();
+  Category? _selectedCategory;
 
-    
   @override
   void initState() {
     super.initState();
+
     SharedPreferencesHelper.getSelectedId().then((medicamentId) {
-      this.medicamentId = medicamentId;
-      return Future.wait([
-        MedicamentSource.getMedicamentById(medicamentId),
-        
-      ]);
-    }).then((results) {
-      setState(() {
-        this.medicament = results[0] as Medicament?;
-        _medicamentNameController.text = medicament?.name ?? '';
-        _medicamentPriceController.text = medicament?.price.toString() ?? '';
-        
-        
+      MedicamentSource.getMedicamentById(medicamentId).then((medicament) {
+        CategorySource.getAllCategories().then((categories) => setState(() {
+              this.categories = categories;
+              this.medicament = medicament;
+              _selectedCategory = categories
+                  .firstWhere((element) => element.id == medicament.idCategory);
+              _medicamentNameController.text = medicament.name;
+              _medicamentPriceController.text = medicament.price.toString();
+            }));
       });
     });
   }
@@ -90,18 +84,37 @@ class _MedicamentUpdateScreenState extends State<MedicamentUpdateScreen> {
                   return null;
                 },
               ),
-             SizedBox(height: 16.0),
-              
+              const SizedBox(height: 16.0),
+              const Text('Category'),
+              DropdownButtonFormField<Category>(
+                value: _selectedCategory,
+                onChanged: (value) => setState(() {
+                  _selectedCategory = value;
+                }),
+                items: categories
+                    .map((category) => DropdownMenuItem<Category>(
+                          value: category,
+                          child: Text(category.name),
+                        ))
+                    .toList(),
+                validator: (value) {
+                  if (value == null) {
+                    return 'Please select category';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     final name = _medicamentNameController.text;
                     final price = double.parse(_medicamentPriceController.text);
                     MedicamentSource.updateMedicament(
-                      medicamentId!,
+                      medicament!.id,
                       name,
                       price,
-                      "selectedCategoryId",
+                      _selectedCategory!.id,
                     ).then((value) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

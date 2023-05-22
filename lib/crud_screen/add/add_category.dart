@@ -6,7 +6,7 @@ class AddCategoryScreen extends StatefulWidget {
   static String routeName = "/addCategory";
 
   @override
-  _AddCategoryScreenState createState() => _AddCategoryScreenState();
+  State<AddCategoryScreen> createState() => _AddCategoryScreenState();
 }
 
 class _AddCategoryScreenState extends State<AddCategoryScreen> {

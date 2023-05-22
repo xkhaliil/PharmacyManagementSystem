@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pharmacymanagementsystem/data/category/category-source.dart';
 import 'package:pharmacymanagementsystem/data/medicament/medicament-source.dart';
+import 'package:pharmacymanagementsystem/model/medicament/category.dart';
 
 class AddMedicamentScreen extends StatefulWidget {
   const AddMedicamentScreen({Key? key}) : super(key: key);
@@ -7,14 +9,25 @@ class AddMedicamentScreen extends StatefulWidget {
   static String routeName = "/addMedicament";
 
   @override
-  _AddMedicamentScreenState createState() => _AddMedicamentScreenState();
+  State<AddMedicamentScreen> createState() => _AddMedicamentScreenState();
 }
 
 class _AddMedicamentScreenState extends State<AddMedicamentScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _priceController = TextEditingController();
- 
+
+  List<Category> categories = List.empty();
+  Category? _selectedCategory;
+
+  @override
+  void initState() {
+    super.initState();
+
+    CategorySource.getAllCategories().then((value) => setState(() {
+          categories = value;
+        }));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +71,18 @@ class _AddMedicamentScreenState extends State<AddMedicamentScreen> {
               ),
               SizedBox(height: 16.0),
               const Text('Category'),
-              DropdownButtonFormField<String>(
-              onChanged: (value) => "s",
-                items: getCategoryDropdownItems(),
+              DropdownButtonFormField<Category>(
+                onChanged: (value) => setState(() {
+                  _selectedCategory = value;
+                }),
+                items: categories
+                    .map((category) => DropdownMenuItem<Category>(
+                          value: category,
+                          child: Text(category.name),
+                        ))
+                    .toList(),
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (value == null) {
                     return 'Please select category';
                   }
                   return null;
@@ -75,7 +95,7 @@ class _AddMedicamentScreenState extends State<AddMedicamentScreen> {
                     MedicamentSource.createMedicament(
                       _nameController.text,
                       double.parse(_priceController.text),
-                      "dwe",
+                      _selectedCategory!.id,
                     ).then((value) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Medicament added')),
@@ -116,6 +136,5 @@ class _AddMedicamentScreenState extends State<AddMedicamentScreen> {
   void clearText() {
     _nameController.clear();
     _priceController.clear();
-   
   }
 }

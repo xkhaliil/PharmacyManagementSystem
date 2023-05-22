@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pharmacymanagementsystem/data/medicament/medicament-source.dart';
 import 'package:pharmacymanagementsystem/model/medicament/category.dart';
 
 class CategorySource {
@@ -39,7 +40,8 @@ class CategorySource {
   }
 
   static Future<void> removeCategory(String id) async {
-    return db.collection(categoryCollection).doc(id).delete();
+    db.collection(categoryCollection).doc(id).delete().then((value) =>
+      MedicamentSource.deleteMedicamentsByCategory(id));
   }
 
   static Future<void> updateCategory(String id, String name) async {

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pharmacymanagementsystem/model/medicament/medicament.dart';
 
@@ -7,7 +6,7 @@ class MedicamentSource {
   static const medicamentCollection = "medicaments";
 
   static Future<void> createMedicament(
-       String name, double price, String idCategory) async {
+      String name, double price, String idCategory) async {
     return db.collection(medicamentCollection).doc().set({
       "name": name,
       "price": price,
@@ -17,16 +16,16 @@ class MedicamentSource {
 
   static Future<List<Medicament>> getAllMedicaments() async {
     return db.collection(medicamentCollection).get().then(
-      (medicaments) => medicaments.docs
-          .map((element) => Medicament(
-                id: element.id,
-                name: element.data()["name"],
-                price: element.data()["price"].toDouble(),
-                idCategory: element.data()["idCategory"],
-              ))
-          .toList(),
-      onError: (e) => print("Error while getAllMedicaments: $e"),
-    );
+          (medicaments) => medicaments.docs
+              .map((element) => Medicament(
+                    id: element.id,
+                    name: element.data()["name"],
+                    price: element.data()["price"].toDouble(),
+                    idCategory: element.data()["idCategory"],
+                  ))
+              .toList(),
+          onError: (e) => print("Error while getAllMedicaments: $e"),
+        );
   }
 
   static Future<Medicament> getMedicamentById(String id) async {
@@ -61,5 +60,40 @@ class MedicamentSource {
         .collection(medicamentCollection)
         .doc(id)
         .set(data, SetOptions(merge: true));
+  }
+
+  static Future<void> deleteMedicamentsByCategory(String id) async {
+    return db
+        .collection(medicamentCollection)
+        .where("idCategory", isEqualTo: id)
+        .get()
+        .then(
+      (documents) {
+        documents.docs.forEach((element) {
+          print("delete one medicament");
+          element.reference.delete();
+        });
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+  }
+
+  static Future<List<Medicament>> getMedicamentByCategory(
+      String categoryId) async {
+    return db
+        .collection(medicamentCollection)
+        .where("idCategory", isEqualTo: categoryId)
+        .get()
+        .then(
+          (medicaments) => medicaments.docs
+              .map((element) => Medicament(
+                    id: element.id,
+                    name: element.data()["name"],
+                    price: element.data()["price"].toDouble(),
+                    idCategory: element.data()["idCategory"],
+                  ))
+              .toList(),
+          onError: (e) => print("Error while getMedicamentByCategory: $e"),
+        );
   }
 }

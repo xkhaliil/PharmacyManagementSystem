@@ -21,6 +21,10 @@ class _ManageAccountsScreenState extends State<ManageAccountsScreen> {
   @mustCallSuper
   void initState() {
     super.initState();
+    getAllAcounts();
+  }
+
+  void getAllAcounts() {
     AccountSource.getAllAccounts().then((accounts) {
       setState(() {
         accountList = accounts;
@@ -81,7 +85,8 @@ class _ManageAccountsScreenState extends State<ManageAccountsScreen> {
                     padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, AddAccountScreen.routeName);
+                        Navigator.pushNamed(context, AddAccountScreen.routeName)
+                            .then((value) => getAllAcounts());
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
@@ -128,7 +133,8 @@ class _ManageAccountsScreenState extends State<ManageAccountsScreen> {
                                 IconButton(
                                   icon: const Icon(Icons.edit),
                                   onPressed: () {
-                                    SharedPreferencesHelper.putSelectedId(accountList[index].id);
+                                    SharedPreferencesHelper.putSelectedId(
+                                        accountList[index].id);
                                     Navigator.pushNamed(
                                         context, AccountUpdateScreen.routeName);
                                   },
@@ -141,10 +147,6 @@ class _ManageAccountsScreenState extends State<ManageAccountsScreen> {
                 },
               ),
             ),
-            Column(
-                children: accountList
-                    .map((account) => ListTile(title: Text(account.name)))
-                    .toList()),
           ],
         ),
       ),

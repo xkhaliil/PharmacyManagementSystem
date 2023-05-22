@@ -75,8 +75,11 @@ class AccountSource {
         print("error while getAccountById: $e");
       });
 
-  static Future<void> removeAccount(String id) async =>
-      db.collection(accountCollection).doc(id).delete();
+  static Future<void> removeAccount(String id) async => db
+      .collection(accountCollection)
+      .doc(id)
+      .delete()
+      .then((value) => FirebaseAuth.instance.currentUser?.delete());
 
   static Future<void> updateAccount(
     String id,

@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pharmacymanagementsystem/admin_home_screen/home.dart';
+import 'package:pharmacymanagementsystem/data/account/account-source.dart';
+import 'package:pharmacymanagementsystem/model/account/account.dart';
 import 'package:pharmacymanagementsystem/salesemployee_screen/emplyeHome.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -44,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen>
       // try sign in
       try {
         //await signInAutomatically();
-        await signIn();
+        await signIn2();
         // ignore: unused_catch_clause
       } on FirebaseAuthException catch (e) {
         // pop the loading circle
@@ -120,6 +122,36 @@ class _LoginScreenState extends State<LoginScreen>
       },
     );
   }
+
+  Future<void> signIn2() async {
+    // ignore: unused_local_variable
+    List<Account> accountList = List.empty();
+    AccountSource.getAllAccounts().then((accounts) {
+      accountList = accounts;
+    });
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      print("trueASF");
+      String userUID = FirebaseAuth.instance.currentUser!.uid;
+      print(userUID);
+      AccountSource.getAllAccounts().then((value) {
+        for (int i = 0; i < value.length; i++) {
+          print(value[i].role);
+          if (value[i].uid == userUID) {
+            print("true");
+            if (value[i].role.toString() == "Role.admin") {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, HomeScreen.routeName, (routes) => false);
+            } else {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, EmployeeHomeScreen.routeName, (routes) => false);
+            }
+          }
+        }
+      });
+      }
 
   bool _isObscure = true;
 
@@ -258,7 +290,7 @@ class _LoginScreenState extends State<LoginScreen>
                       width: 300,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: signUserIn,
+                        onPressed:signUserIn,
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
                               const Color(0xFF434242)),

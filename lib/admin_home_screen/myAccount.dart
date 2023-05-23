@@ -1,17 +1,50 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pharmacymanagementsystem/data/account/account-source.dart';
+import 'package:pharmacymanagementsystem/model/account/account.dart';
 import 'package:pharmacymanagementsystem/screens/login_screen/login.dart';
 
 class MyAccountScreen extends StatefulWidget {
-  const MyAccountScreen({Key? key}) : super(key: key);
+  
   static String routeName = "/myAccount";
+  String name="";
+  String lastname="";
+  String email="";
+  String phone="";
+  String role="";
 
   @override
   State<MyAccountScreen> createState() => _MyAccountScreenState();
 }
 
 class _MyAccountScreenState extends State<MyAccountScreen> {
+  String userUID = FirebaseAuth.instance.currentUser!.uid;
+  List<Account> accountList = List.empty();
+  @override
+  void initState() {
+    super.initState();
+    acc();
+  }
+
+  void acc() {
+    AccountSource.getAllAccounts().then((accounts) {
+      accountList = accounts;
+    });
+    for (int i = 0; i < accountList.length; i++) {
+      if (accountList[i].uid == userUID) {
+        setState(() {
+          widget.name = accountList[i].name;
+          widget.lastname = accountList[i].lastname;
+          widget.email = accountList[i].email;
+          widget.phone = accountList[i].phone;
+          widget.role = accountList[i].role.toString();
+        });
+      }
+    }
+  }
+
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
     print('User is currently signed out!');
@@ -62,7 +95,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
               child: Column(
                 children: [
                   Text(
-                    "Khalil Ltaief",
+                    "${FirebaseAuth.instance.currentUser!.email}",
                     style: Theme.of(context)
                         .textTheme
                         .titleLarge
@@ -73,7 +106,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       FloatingActionButton.extended(
-                        onPressed: () {},
+                        onPressed: () {
+                          showAdmininfo();
+                        },
                         heroTag: 'Contact support',
                         elevation: 0,
                         label: const Text("Contact support"),
@@ -81,8 +116,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                       ),
                       const SizedBox(width: 16.0),
                       FloatingActionButton.extended(
-                        onPressed: () {
-                          signOut;  
+                        onPressed: () async {
+                          await FirebaseAuth.instance.signOut();
+                          print('User is currently signed out!');
                           Navigator.pushNamedAndRemoveUntil(
                               context, LoginScreen.routeName, (route) => false);
                         },
@@ -110,8 +146,7 @@ class _ProfileInfoRow extends StatelessWidget {
   const _ProfileInfoRow({Key? key}) : super(key: key);
 
   final List<ProfileInfoItem> _items = const [
-    ProfileInfoItem("Pharmacy", "khairedin"),
-    ProfileInfoItem("Role", "Admin"),
+   
   ];
 
   @override

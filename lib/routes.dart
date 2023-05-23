@@ -11,6 +11,7 @@ import 'package:pharmacymanagementsystem/crud_screen/update/update_account.dart'
 import 'package:pharmacymanagementsystem/crud_screen/update/update_category.dart';
 import 'package:pharmacymanagementsystem/crud_screen/update/update_medicament.dart';
 import 'package:pharmacymanagementsystem/crud_screen/update/update_sale.dart';
+import 'package:pharmacymanagementsystem/salesemployee_screen/employesale.dart';
 
 
 import 'package:pharmacymanagementsystem/screens/error_screen/error.dart';
@@ -33,7 +34,7 @@ Map<String, WidgetBuilder> routes = {
   HomeScreen.routeName :(context) => const HomeScreen(),
   EmployeeHomeScreen.routeName :(context) => const EmployeeHomeScreen(),
   StatisticsScreen.routeName:(context) => const StatisticsScreen(),
-  MyAccountScreen.routeName :(context) => const MyAccountScreen(),
+  MyAccountScreen.routeName :(context) =>  MyAccountScreen(),
   AddAccountScreen.routeName :(context) => const AddAccountScreen(),
   AccountUpdateScreen.routeName :(context) => const AccountUpdateScreen(),
   AccountRemoveScreen.routeName :(context) => const AccountRemoveScreen(),
@@ -47,5 +48,6 @@ Map<String, WidgetBuilder> routes = {
   MedicamentUpdateScreen.routeName :(context) =>  const MedicamentUpdateScreen(),
   AddSaleScreen.routeName :(context) => const AddSaleScreen(),
   UpdateSaleScreen.routeName  :(context) => const UpdateSaleScreen(),
+  EmployeeManageSalesScreen.routeName :(context) => const EmployeeManageSalesScreen(),
   
 };
